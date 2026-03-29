@@ -1,7 +1,7 @@
 package com.provadis.incidentmanagement.alarm.model;
 
 public enum AlarmSeverity {
-    LOW,
-    MEDIUM,
-    HIGH
+    CRITICAL,
+    MAJOR,
+    MINOR
 }
