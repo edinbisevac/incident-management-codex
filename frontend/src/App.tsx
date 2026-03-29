@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import provadisLogo from './assets/provadis_logo.png'
 import './App.css'
 
 type IncidentStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED'
@@ -263,335 +264,344 @@ function App() {
 
   return (
     <main className="app-shell">
-      <header className="page-header">
-        <div>
-          <h1>Incident Management MVP</h1>
-          <p>Einfache Oberflaeche fuer manuelle Incidents und eingehende Alarme.</p>
-        </div>
-        <button type="button" onClick={() => void refreshData(alarmSourceFilter)}>
-          Aktualisieren
-        </button>
-      </header>
-
-      {(message || error) && (
-        <section className="feedback-area">
-          {message && <p className="feedback success">{message}</p>}
-          {error && <p className="feedback error">{error}</p>}
-        </section>
-      )}
-
-      <section className="form-grid">
-        <article className="panel">
-          <h2>Incident erstellen</h2>
-          <form className="stack-form" onSubmit={handleCreateIncident}>
-            <label>
-              Titel
-              <input
-                value={incidentForm.title}
-                onChange={(event) =>
-                  setIncidentForm((current) => ({
-                    ...current,
-                    title: event.target.value,
-                  }))
-                }
-                required
-              />
-            </label>
-
-            <label>
-              Beschreibung
-              <textarea
-                value={incidentForm.description}
-                onChange={(event) =>
-                  setIncidentForm((current) => ({
-                    ...current,
-                    description: event.target.value,
-                  }))
-                }
-                rows={4}
-                required
-              />
-            </label>
-
-            <label>
-              Source
-              <input
-                value={incidentForm.source}
-                onChange={(event) =>
-                  setIncidentForm((current) => ({
-                    ...current,
-                    source: event.target.value,
-                  }))
-                }
-                required
-              />
-            </label>
-
-            <div className="inline-fields">
-              <label>
-                Status
-                <select
-                  value={incidentForm.status}
-                  onChange={(event) =>
-                    setIncidentForm((current) => ({
-                      ...current,
-                      status: event.target.value as IncidentStatus,
-                    }))
-                  }
-                >
-                  {incidentStatuses.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                Prioritaet
-                <select
-                  value={incidentForm.priority}
-                  onChange={(event) =>
-                    setIncidentForm((current) => ({
-                      ...current,
-                      priority: event.target.value as IncidentPriority,
-                    }))
-                  }
-                >
-                  {incidentPriorities.map((priority) => (
-                    <option key={priority} value={priority}>
-                      {priority}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-
-            <button type="submit" disabled={submitting}>
-              Incident speichern
-            </button>
-          </form>
-        </article>
-
-        <article className="panel">
-          <h2>Alarm senden</h2>
-          <form className="stack-form" onSubmit={handleCreateAlarm}>
-            <label>
-              Source
-              <input
-                value={alarmForm.source}
-                onChange={(event) =>
-                  setAlarmForm((current) => ({
-                    ...current,
-                    source: event.target.value,
-                  }))
-                }
-                required
-              />
-            </label>
-
-            <label>
-              Meldung
-              <textarea
-                value={alarmForm.message}
-                onChange={(event) =>
-                  setAlarmForm((current) => ({
-                    ...current,
-                    message: event.target.value,
-                  }))
-                }
-                rows={4}
-                required
-              />
-            </label>
-
-            <label>
-              Severity
-              <select
-                value={alarmForm.severity}
-                onChange={(event) =>
-                  setAlarmForm((current) => ({
-                    ...current,
-                    severity: event.target.value as AlarmSeverity,
-                  }))
-                }
-              >
-                {alarmSeverities.map((severity) => (
-                  <option key={severity} value={severity}>
-                    {severity}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <button type="submit" disabled={submitting}>
-              Alarm senden
-            </button>
-          </form>
-        </article>
-      </section>
-
-      <section className="data-grid">
-        <article className="panel">
-          <div className="panel-header">
-            <div>
-              <h2>Incidents</h2>
-              <p>{incidents.length} Eintraege</p>
-            </div>
+      <div className="app-frame">
+        <header className="page-header">
+          <div>
+            <h1>Incident Management MVP</h1>
+            <p>Einfache Oberflaeche fuer manuelle Incidents und eingehende Alarme.</p>
           </div>
+          <div className="header-actions">
+            <img
+              className="brand-logo"
+              src={provadisLogo}
+              alt="Provadis Logo"
+            />
+            <button type="button" onClick={() => void refreshData(alarmSourceFilter)}>
+              Aktualisieren
+            </button>
+          </div>
+        </header>
 
-          <div className="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Titel</th>
-                  <th>Beschreibung</th>
-                  <th>Source</th>
-                  <th>Status</th>
-                  <th>Prioritaet</th>
-                  <th>Aktionen</th>
-                </tr>
-              </thead>
-              <tbody>
-                {incidents.length === 0 && (
+        {(message || error) && (
+          <section className="feedback-area">
+            {message && <p className="feedback success">{message}</p>}
+            {error && <p className="feedback error">{error}</p>}
+          </section>
+        )}
+
+        <section className="form-grid">
+          <article className="panel">
+            <h2>Incident erstellen</h2>
+            <form className="stack-form" onSubmit={handleCreateIncident}>
+              <label>
+                Titel
+                <input
+                  value={incidentForm.title}
+                  onChange={(event) =>
+                    setIncidentForm((current) => ({
+                      ...current,
+                      title: event.target.value,
+                    }))
+                  }
+                  required
+                />
+              </label>
+
+              <label>
+                Beschreibung
+                <textarea
+                  value={incidentForm.description}
+                  onChange={(event) =>
+                    setIncidentForm((current) => ({
+                      ...current,
+                      description: event.target.value,
+                    }))
+                  }
+                  rows={4}
+                  required
+                />
+              </label>
+
+              <label>
+                Source
+                <input
+                  value={incidentForm.source}
+                  onChange={(event) =>
+                    setIncidentForm((current) => ({
+                      ...current,
+                      source: event.target.value,
+                    }))
+                  }
+                  required
+                />
+              </label>
+
+              <div className="inline-fields">
+                <label>
+                  Status
+                  <select
+                    value={incidentForm.status}
+                    onChange={(event) =>
+                      setIncidentForm((current) => ({
+                        ...current,
+                        status: event.target.value as IncidentStatus,
+                      }))
+                    }
+                  >
+                    {incidentStatuses.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
+                  Prioritaet
+                  <select
+                    value={incidentForm.priority}
+                    onChange={(event) =>
+                      setIncidentForm((current) => ({
+                        ...current,
+                        priority: event.target.value as IncidentPriority,
+                      }))
+                    }
+                  >
+                    {incidentPriorities.map((priority) => (
+                      <option key={priority} value={priority}>
+                        {priority}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <button type="submit" disabled={submitting}>
+                Incident speichern
+              </button>
+            </form>
+          </article>
+
+          <article className="panel">
+            <h2>Alarm senden</h2>
+            <form className="stack-form" onSubmit={handleCreateAlarm}>
+              <label>
+                Source
+                <input
+                  value={alarmForm.source}
+                  onChange={(event) =>
+                    setAlarmForm((current) => ({
+                      ...current,
+                      source: event.target.value,
+                    }))
+                  }
+                  required
+                />
+              </label>
+
+              <label>
+                Meldung
+                <textarea
+                  value={alarmForm.message}
+                  onChange={(event) =>
+                    setAlarmForm((current) => ({
+                      ...current,
+                      message: event.target.value,
+                    }))
+                  }
+                  rows={4}
+                  required
+                />
+              </label>
+
+              <label>
+                Severity
+                <select
+                  value={alarmForm.severity}
+                  onChange={(event) =>
+                    setAlarmForm((current) => ({
+                      ...current,
+                      severity: event.target.value as AlarmSeverity,
+                    }))
+                  }
+                >
+                  {alarmSeverities.map((severity) => (
+                    <option key={severity} value={severity}>
+                      {severity}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <button type="submit" disabled={submitting}>
+                Alarm senden
+              </button>
+            </form>
+          </article>
+        </section>
+
+        <section className="data-grid">
+          <article className="panel">
+            <div className="panel-header">
+              <div>
+                <h2>Incidents</h2>
+                <p>{incidents.length} Eintraege</p>
+              </div>
+            </div>
+
+            <div className="table-wrapper">
+              <table>
+                <thead>
                   <tr>
-                    <td colSpan={7} className="empty-state">
-                      {loading ? 'Lade Daten...' : 'Keine Incidents vorhanden.'}
-                    </td>
+                    <th>ID</th>
+                    <th>Titel</th>
+                    <th>Beschreibung</th>
+                    <th>Source</th>
+                    <th>Status</th>
+                    <th>Prioritaet</th>
+                    <th>Aktionen</th>
                   </tr>
-                )}
+                </thead>
+                <tbody>
+                  {incidents.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="empty-state">
+                        {loading ? 'Lade Daten...' : 'Keine Incidents vorhanden.'}
+                      </td>
+                    </tr>
+                  )}
 
-                {incidents.map((incident) => (
-                  <tr key={incident.id}>
-                    <td>{incident.id}</td>
-                    <td>{incident.title}</td>
-                    <td>{incident.description}</td>
-                    <td>{incident.source}</td>
-                    <td>
-                      <select
-                        value={incident.status}
-                        onChange={(event) =>
-                          void handleStatusChange(
-                            incident.id,
-                            event.target.value as IncidentStatus,
-                          )
-                        }
-                      >
-                        {incidentStatuses.map((status) => (
-                          <option key={status} value={status}>
-                            {status}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <select
-                        value={incident.priority}
-                        onChange={(event) =>
-                          void handlePriorityChange(
-                            incident.id,
-                            event.target.value as IncidentPriority,
-                          )
-                        }
-                      >
-                        {incidentPriorities.map((priority) => (
-                          <option key={priority} value={priority}>
-                            {priority}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <div className="action-group">
-                        {incident.source.trim() && (
+                  {incidents.map((incident) => (
+                    <tr key={incident.id}>
+                      <td>{incident.id}</td>
+                      <td>{incident.title}</td>
+                      <td>{incident.description}</td>
+                      <td>{incident.source}</td>
+                      <td>
+                        <select
+                          value={incident.status}
+                          onChange={(event) =>
+                            void handleStatusChange(
+                              incident.id,
+                              event.target.value as IncidentStatus,
+                            )
+                          }
+                        >
+                          {incidentStatuses.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <select
+                          value={incident.priority}
+                          onChange={(event) =>
+                            void handlePriorityChange(
+                              incident.id,
+                              event.target.value as IncidentPriority,
+                            )
+                          }
+                        >
+                          {incidentPriorities.map((priority) => (
+                            <option key={priority} value={priority}>
+                              {priority}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td>
+                        <div className="action-group">
+                          {incident.source.trim() && (
+                            <button
+                              type="button"
+                              onClick={() => void handleOpenMessages(incident.source)}
+                            >
+                              Nachrichten
+                            </button>
+                          )}
                           <button
                             type="button"
-                            onClick={() => void handleOpenMessages(incident.source)}
+                            className="danger-button"
+                            onClick={() => void handleDeleteIncident(incident.id)}
                           >
-                            Nachrichten
+                            Loeschen
                           </button>
-                        )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article className="panel">
+            <div className="panel-header">
+              <div>
+                <h2>Alarme</h2>
+                <p>{alarms.length} Eintraege</p>
+              </div>
+
+              <form className="filter-form" onSubmit={handleAlarmFilterSubmit}>
+                <input
+                  placeholder="Nach source filtern"
+                  value={alarmSourceFilter}
+                  onChange={(event) => setAlarmSourceFilter(event.target.value)}
+                />
+                <button type="submit">Filter</button>
+                <button type="button" onClick={() => void handleAlarmFilterReset()}>
+                  Reset
+                </button>
+              </form>
+            </div>
+
+            <div className="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Source</th>
+                    <th>Meldung</th>
+                    <th>Severity</th>
+                    <th>Created At</th>
+                    <th>Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {alarms.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="empty-state">
+                        {loading ? 'Lade Daten...' : 'Keine Alarme vorhanden.'}
+                      </td>
+                    </tr>
+                  )}
+
+                  {alarms.map((alarm) => (
+                    <tr key={alarm.id}>
+                      <td>{alarm.id}</td>
+                      <td>{alarm.source}</td>
+                      <td>{alarm.message}</td>
+                      <td>{alarm.severity}</td>
+                      <td>{formatDateTime(alarm.createdAt)}</td>
+                      <td>
                         <button
                           type="button"
                           className="danger-button"
-                          onClick={() => void handleDeleteIncident(incident.id)}
+                          onClick={() => void handleDeleteAlarm(alarm.id)}
                         >
                           Loeschen
                         </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </article>
-
-        <article className="panel">
-          <div className="panel-header">
-            <div>
-              <h2>Alarme</h2>
-              <p>{alarms.length} Eintraege</p>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-
-            <form className="filter-form" onSubmit={handleAlarmFilterSubmit}>
-              <input
-                placeholder="Nach source filtern"
-                value={alarmSourceFilter}
-                onChange={(event) => setAlarmSourceFilter(event.target.value)}
-              />
-              <button type="submit">Filter</button>
-              <button type="button" onClick={() => void handleAlarmFilterReset()}>
-                Reset
-              </button>
-            </form>
-          </div>
-
-          <div className="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Source</th>
-                  <th>Meldung</th>
-                  <th>Severity</th>
-                  <th>Created At</th>
-                  <th>Aktionen</th>
-                </tr>
-              </thead>
-              <tbody>
-                {alarms.length === 0 && (
-                  <tr>
-                    <td colSpan={6} className="empty-state">
-                      {loading ? 'Lade Daten...' : 'Keine Alarme vorhanden.'}
-                    </td>
-                  </tr>
-                )}
-
-                {alarms.map((alarm) => (
-                  <tr key={alarm.id}>
-                    <td>{alarm.id}</td>
-                    <td>{alarm.source}</td>
-                    <td>{alarm.message}</td>
-                    <td>{alarm.severity}</td>
-                    <td>{formatDateTime(alarm.createdAt)}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="danger-button"
-                        onClick={() => void handleDeleteAlarm(alarm.id)}
-                      >
-                        Loeschen
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </article>
-      </section>
+          </article>
+        </section>
+      </div>
 
       {messagesSource && (
         <div
