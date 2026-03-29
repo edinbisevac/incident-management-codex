@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IncidentRepository extends JpaRepository<Incident, Long> {
 
-    Optional<Incident> findFirstBySourceAndStatusNotOrderByIdAsc(String source, IncidentStatus status);
+    Optional<Incident> findFirstBySourceIgnoreCaseAndStatusNotOrderByIdAsc(String source, IncidentStatus status);
 }

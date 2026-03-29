@@ -64,7 +64,7 @@ public class AlarmService {
     private void upsertIncidentForAlarm(Alarm alarm) {
         IncidentPriority mappedPriority = mapSeverityToPriority(alarm.getSeverity());
 
-        Incident incident = incidentRepository.findFirstBySourceAndStatusNotOrderByIdAsc(
+        Incident incident = incidentRepository.findFirstBySourceIgnoreCaseAndStatusNotOrderByIdAsc(
                         alarm.getSource(),
                         IncidentStatus.RESOLVED
                 )

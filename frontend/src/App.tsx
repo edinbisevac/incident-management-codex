@@ -171,7 +171,7 @@ function App() {
 
     try {
       await apiRequest<void>(`/api/incidents/${id}`, { method: 'DELETE' })
-      setMessage('Incident wurde gelöscht.')
+      setMessage('Incident wurde geloescht.')
       await refreshData(alarmSourceFilter)
     } catch (requestError) {
       setError(getErrorMessage(requestError))
@@ -184,7 +184,7 @@ function App() {
 
     try {
       await apiRequest<void>(`/api/alarms/${id}`, { method: 'DELETE' })
-      setMessage('Alarm wurde gelöscht.')
+      setMessage('Alarm wurde geloescht.')
       await refreshData(alarmSourceFilter)
     } catch (requestError) {
       setError(getErrorMessage(requestError))
@@ -218,7 +218,7 @@ function App() {
         body: JSON.stringify({ priority }),
       })
 
-      setMessage('Priorität wurde aktualisiert.')
+      setMessage('Prioritaet wurde aktualisiert.')
       await refreshData(alarmSourceFilter)
     } catch (requestError) {
       setError(getErrorMessage(requestError))
@@ -271,11 +271,7 @@ function App() {
             <p>Einfache Oberflaeche fuer manuelle Incidents und eingehende Alarme.</p>
           </div>
           <div className="header-actions">
-            <img
-              className="brand-logo"
-              src={provadisLogo}
-              alt="Provadis Logo"
-            />
+            <img className="brand-logo" src={provadisLogo} alt="Provadis Logo" />
             <button type="button" onClick={() => void refreshData(alarmSourceFilter)}>
               Aktualisieren
             </button>
