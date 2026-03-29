@@ -88,6 +88,10 @@ function App() {
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [messagesSource, setMessagesSource] = useState<string | null>(null)
+  const [sourceAlarms, setSourceAlarms] = useState<Alarm[]>([])
+  const [messagesLoading, setMessagesLoading] = useState(false)
+  const [messagesError, setMessagesError] = useState('')
 
   useEffect(() => {
     void refreshData()
@@ -230,6 +234,31 @@ function App() {
     setAlarmSourceFilter('')
     setMessage('')
     await refreshData('')
+  }
+
+  async function handleOpenMessages(source: string) {
+    setMessagesSource(source)
+    setSourceAlarms([])
+    setMessagesError('')
+    setMessagesLoading(true)
+
+    try {
+      const alarmData = await apiRequest<Alarm[]>(
+        `/api/alarms?source=${encodeURIComponent(source)}`,
+      )
+      setSourceAlarms(alarmData)
+    } catch (requestError) {
+      setMessagesError(getErrorMessage(requestError))
+    } finally {
+      setMessagesLoading(false)
+    }
+  }
+
+  function handleCloseMessages() {
+    setMessagesSource(null)
+    setSourceAlarms([])
+    setMessagesError('')
+    setMessagesLoading(false)
   }
 
   return (
@@ -474,13 +503,23 @@ function App() {
                       </select>
                     </td>
                     <td>
-                      <button
-                        type="button"
-                        className="danger-button"
-                        onClick={() => void handleDeleteIncident(incident.id)}
-                      >
-                        Loeschen
-                      </button>
+                      <div className="action-group">
+                        {incident.source.trim() && (
+                          <button
+                            type="button"
+                            onClick={() => void handleOpenMessages(incident.source)}
+                          >
+                            Nachrichten
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          className="danger-button"
+                          onClick={() => void handleDeleteIncident(incident.id)}
+                        >
+                          Loeschen
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -553,6 +592,70 @@ function App() {
           </div>
         </article>
       </section>
+
+      {messagesSource && (
+        <div
+          className="modal-backdrop"
+          role="presentation"
+          onClick={handleCloseMessages}
+        >
+          <section
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="messages-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <h2 id="messages-modal-title">Nachrichten zu {messagesSource}</h2>
+                <p>Geladen ueber GET /api/alarms?source=...</p>
+              </div>
+              <button type="button" onClick={handleCloseMessages}>
+                Schliessen
+              </button>
+            </div>
+
+            {messagesError && <p className="feedback error">{messagesError}</p>}
+
+            <div className="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Severity</th>
+                    <th>Nachricht</th>
+                    <th>Created At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {messagesLoading && (
+                    <tr>
+                      <td colSpan={3} className="empty-state">
+                        Lade Nachrichten...
+                      </td>
+                    </tr>
+                  )}
+                  {!messagesLoading && sourceAlarms.length === 0 && !messagesError && (
+                    <tr>
+                      <td colSpan={3} className="empty-state">
+                        Keine Alarmnachrichten fuer diese Source gefunden.
+                      </td>
+                    </tr>
+                  )}
+                  {!messagesLoading &&
+                    sourceAlarms.map((alarm) => (
+                      <tr key={alarm.id}>
+                        <td>{alarm.severity}</td>
+                        <td>{alarm.message}</td>
+                        <td>{formatDateTime(alarm.createdAt)}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   )
 }

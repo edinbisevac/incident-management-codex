@@ -105,6 +105,12 @@ button:disabled {
   gap: 8px;
 }
 
+.action-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .feedback {
   margin: 0;
   padding: 10px 12px;
@@ -159,6 +165,34 @@ th {
   min-width: 180px;
 }
 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.modal {
+  width: min(900px, 100%);
+  max-height: 85vh;
+  overflow: auto;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
 @media (max-width: 900px) {
   .app-shell {
     padding: 16px;
@@ -166,7 +200,8 @@ th {
 
   .page-header,
   .panel-header,
-  .inline-fields {
+  .inline-fields,
+  .modal-header {
     flex-direction: column;
   }
 }
